@@ -33,9 +33,9 @@ TwentyOne TwentyTwo TwentyThree TwentyFour TwentyFive]
     |> #{word}.part_one()
     |> IO.inspect()
 
-    input
-    |> #{word}.part_two()
-    |> IO.inspect()
+    # input
+    # |> #{word}.part_two()
+    # |> IO.inspect()
     """
 
   File.touch("input/#{day}.txt")
