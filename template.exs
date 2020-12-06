@@ -29,10 +29,12 @@ TwentyOne TwentyTwo TwentyThree TwentyFour TwentyFive]
 
     input = File.read!("input/#{day}.txt")
 
-    #{word}.part_one(input)
+    input
+    |> #{word}.part_one()
     |> IO.inspect()
 
-    #{word}.part_two(input)
+    input
+    |> #{word}.part_two()
     |> IO.inspect()
     """
 
