@@ -6,13 +6,16 @@ defmodule Twelve do
   end
 
   def part_two(input) do
-    # splits json into individual characters but keeps [\-a-z0-9] grouped together
-    splitter = ~r/(?<=[\-\w])(?=[^\-\w])|(?<=[^\-\w])(?=[\-\w])|(?<=[^\-\w])(?=[^\-\w])/
-    Regex.split(splitter, input)
+    input
+    |> String.graphemes()
+    |> Enum.with_index()
+    |> Enum.chunk_by(fn {grapheme, i} -> if (grapheme =~ ~r/[\-\w]/), do: true, else: i end)
+    |> Enum.map(&Enum.map(&1, fn {grapheme, _i} -> grapheme end))
+    |> Enum.map(&Enum.join/1)
     |> Enum.map(fn chunk ->
       case Integer.parse(chunk) do
         {n, ""} -> n
-        :error -> chunk
+        :error  -> chunk
       end
     end)
     |> count()
