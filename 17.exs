@@ -11,9 +11,8 @@ defmodule Seventeen do
     input
     |> parse()
     |> map_counts(@eggnog)
-    |> Enum.filter(fn {k, v} -> v != 0 end)
-    |> Enum.sort()
-    |> hd()
+    |> Enum.filter(fn {_k, v} -> v != 0 end)
+    |> Enum.min()
     |> elem(1)
   end
 
@@ -34,20 +33,21 @@ defmodule Seventeen do
 
   defp map_counts(list, target), do: do_counts(Enum.sort(list), target, 0)
 
-  defp do_counts([], _, used), do: Map.put(%{}, used, 0)
-  defp do_counts([head | _rest], target, used) when head > target, do: Map.put(%{}, used, 0)
+  defp do_counts([], _, used), do: %{}
+  defp do_counts([head | _rest], target, used) when head > target, do: %{}
   defp do_counts([target | rest], target, used) do
-    not_using = do_counts(rest, target, used)
-    Map.merge(not_using, Map.put(%{}, used, 1), fn _k, v1, v2 ->
-      v1 + v2
-    end)
+    Map.merge(
+      %{used => 1},
+      do_counts(rest, target, used),
+      fn _k, v1, v2 -> v1 + v2 end
+    )
   end
   defp do_counts([head | rest], target, used) do
-    using = do_counts(rest, target - head, used + 1)
-    not_using = do_counts(rest, target, used)
-    Map.merge(using, not_using, fn _k, v1, v2 ->
-      v1 + v2
-    end)
+    Map.merge(
+      do_counts(rest, target - head, used + 1),
+      do_counts(rest, target, used),
+      fn _k, v1, v2 -> v1 + v2 end
+    )
   end
 end
 
